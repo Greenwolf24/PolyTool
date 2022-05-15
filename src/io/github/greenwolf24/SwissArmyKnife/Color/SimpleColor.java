@@ -1,7 +1,8 @@
 package io.github.greenwolf24.SwissArmyKnife.Color;
 
 // Added in version 1.0.0 of the SwissArmyKnife library.
-// Class version: 1.0.0
+// Class version: 1.0.1
+// Last modified for Library version: 1.0.1
 
 public class SimpleColor
 {
@@ -20,11 +21,14 @@ public class SimpleColor
 	
 	public SimpleColor(int r, int g, int b)
 	{
-		this(r, g, b, 255);
+		Red = r;
+		Green = g;
+		Blue = b;
+		Alpha = 255;
 	}
 	
 	// This method is multi-purpose.
-	// It can either be used to update the color directly, or be used to create a new color.
+	// It updates the color directly, but can also be used externally to create a new color.
 	// this creates flexibility for whatever use-case you may have.
 	public String nextColor()
 	{
@@ -68,16 +72,46 @@ public class SimpleColor
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("#");
+		
+		// it is possible that the hex string will be a single digit, so we need to pad it
+		
 		if(alphaFirst)
 		{
+			if(Alpha < 16)
+			{
+				sb.append("0");
+			}
 			sb.append(Integer.toHexString(Alpha));
 		}
+		if(Red < 16)
+		{
+			sb.append("0");
+		}
 		sb.append(Integer.toHexString(Red));
+		if(Green < 16)
+		{
+			sb.append("0");
+		}
 		sb.append(Integer.toHexString(Green));
+		if(Blue < 16)
+		{
+			sb.append("0");
+		}
 		sb.append(Integer.toHexString(Blue));
 		if(!alphaFirst)
 		{
+			if(Alpha < 16)
+			{
+				sb.append("0");
+			}
 			sb.append(Integer.toHexString(Alpha));
+		}
+		//sb.append(Integer.toHexString(Red));
+		//sb.append(Integer.toHexString(Green));
+		//sb.append(Integer.toHexString(Blue));
+		//if(!alphaFirst)
+		{
+		//	sb.append(Integer.toHexString(Alpha));
 		}
 		return sb.toString();
 	}
