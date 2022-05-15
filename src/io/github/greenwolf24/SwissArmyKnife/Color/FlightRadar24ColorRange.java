@@ -3,7 +3,8 @@ package io.github.greenwolf24.SwissArmyKnife.Color;
 import java.util.LinkedHashMap;
 
 // Added in version 1.0.0 of the SwissArmyKnife library.
-// Class version: 1.0.0
+// Class version: 1.0.1
+// Last modified for Library version: 1.1.0
 
 public class FlightRadar24ColorRange
 {
@@ -59,6 +60,9 @@ public class FlightRadar24ColorRange
 			if(altitudeFeet <= key)
 			{
 				color = colorMap.get(key);
+			}
+			else
+			{
 				break;
 			}
 		}

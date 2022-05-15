@@ -1,8 +1,8 @@
 package io.github.greenwolf24.SwissArmyKnife.Color;
 
 // Added in version 1.0.0 of the SwissArmyKnife library.
-// Class version: 1.0.1
-// Last modified for Library version: 1.0.1
+// Class version: 1.1.0
+// Last modified for Library version: 1.1.0
 
 public class SimpleColor
 {
@@ -125,5 +125,40 @@ public class SimpleColor
 	{
 		// this is a simple call to toString() without the #
 		return toString(alphaFirst).substring(1);
+	}
+	
+	public String kmlFormat()
+	{
+		// KML format is formated as: AA BB GG RR
+		// AA is the alpha value, BB is the blue value, GG is the green value, RR is the red value
+		
+		StringBuilder sb = new StringBuilder();
+		
+		// it is possible that the hex string will be a single digit, so we need to pad it
+		if(Alpha < 16)
+		{
+			sb.append("0");
+		}
+		sb.append(Integer.toHexString(Alpha));
+		
+		if(Blue < 16)
+		{
+			sb.append("0");
+		}
+		sb.append(Integer.toHexString(Blue));
+		
+		if(Green < 16)
+		{
+			sb.append("0");
+		}
+		sb.append(Integer.toHexString(Green));
+		
+		if(Red < 16)
+		{
+			sb.append("0");
+		}
+		sb.append(Integer.toHexString(Red));
+		
+		return sb.toString();
 	}
 }
