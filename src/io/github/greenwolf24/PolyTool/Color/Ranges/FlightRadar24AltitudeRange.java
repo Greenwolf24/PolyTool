@@ -1,21 +1,23 @@
-package io.github.greenwolf24.SwissArmyKnife.Color;
+package io.github.greenwolf24.PolyTool.Color.Ranges;
+
+import io.github.greenwolf24.PolyTool.Color.SimpleColor;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
-// Added in version 1.0.0 of the SwissArmyKnife library.
+// Added in version 1.0.0 of the PolyTool library.
 // Class version: 1.0.2
-// Last modified for Library version: 1.1.1
+// Last modified for Library version: 1.2.0. The change was refactoring the class name.
 
-public class FlightRadar24ColorRange
+public class FlightRadar24AltitudeRange
 {
 	// The color range
 	// The key is the altitude in feet
 	// The value is the simple color
-	private LinkedHashMap<Integer,SimpleColor> colorMap;
+	private LinkedHashMap<Integer, SimpleColor> colorMap;
 	
-	public FlightRadar24ColorRange()
+	public FlightRadar24AltitudeRange()
 	{
 		// this is only an approximation of what FlightRadar24 does
 		// I found a key in meters, but it appears like the actual check is done in feet

@@ -1,0 +1,11 @@
+Previously published version: 1.1.1
+
+Next version being currently worked on: 1.2.0
+
+The unlabeled .jar artifact is 1.2.0-Testing
+The .jar artifacts are in one of three states
+Testing - Not to be released / unconfirmed if working or not.
+PreRelease - Should be functionality equivalent to the final release version, just needs final polish. Named as such
+Release - Final build of working version. Only on the final build will the version number be appended
+
+TODO rename to PolyTool
