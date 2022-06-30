@@ -1,8 +1,8 @@
 package io.github.greenwolf24.PolyTool.Mapping;
 
 // Added in version 1.3.0 of the PolyTool library.
-// Class version: 1.0.0
-// Last modified for Library version: 1.3.0
+// Class version: 1.1.0
+// Last modified for Library version: 1.4.0
 
 public class Position
 {
@@ -43,6 +43,12 @@ public class Position
 	{
 		Altitude = alt;
 		hasAltitude = true;
+	}
+	
+	public void removeAltitude()
+	{
+		Altitude = 0;
+		hasAltitude = false;
 	}
 	
 	public String toString()

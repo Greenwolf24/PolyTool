@@ -1,16 +1,30 @@
 package io.github.greenwolf24.PolyTool.Mapping;
 
 // Added in version 1.3.0 of the PolyTool library.
-// Class version: 1.0.0
-// Last modified for Library version: 1.3.0
+// Class version: 1.1.0
+// Last modified for Library version: 1.4.0
 
 import io.github.greenwolf24.PolyTool.Graphing.Triangle;
 import io.github.greenwolf24.PolyTool.Graphing.XYZCoordinates;
 
 import java.util.ArrayList;
 
+import static java.lang.Math.*;
+
 public class Util
 {
+	public static boolean allHaveAltitudes(ArrayList<Position> positions)
+	{
+		for(Position p : positions)
+		{
+			if(!p.hasAltitude)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	public static double distanceBetween(Position p1, Position p2)
 	{
 		// Get the distance between the two points in meters
@@ -25,7 +39,7 @@ public class Util
 		double lon1 = Math.toRadians(p1.getLongitude());
 		double lon2 = Math.toRadians(p2.getLongitude());
 		
-		double d = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin((lat1 - lat2) / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin((lon1 - lon2) / 2), 2)));
+		double d = 2 * Math.asin(Math.sqrt(Math.pow(sin((lat1 - lat2) / 2), 2) + cos(lat1) * cos(lat2) * Math.pow(sin((lon1 - lon2) / 2), 2)));
 		d = d * 6371000; // D is in meters
 		
 		return d;
@@ -44,11 +58,47 @@ public class Util
 		double lon1 = Math.toRadians(p1.getLongitude());
 		double lon2 = Math.toRadians(p2.getLongitude());
 		
-		double theta = Math.atan2(Math.sin(lon2 - lon1) * Math.cos(lat2), Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(lon2 - lon1));
+		double theta = Math.atan2(sin(lon2 - lon1) * cos(lat2), cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(lon2 - lon1));
 		theta = Math.toDegrees(theta);
 		theta = (theta + 360) % 360; // theta is in degrees
 		
 		return theta;
+	}
+	
+	public static Position fromBearing(Position pos, double bearing, double distanceM)
+	{
+		double latRad = Math.toRadians(pos.getLatitude());
+		double lonRad = Math.toRadians(pos.getLongitude());
+		double brngRad= Math.toRadians(bearing);
+		double earthRadiusInMeters = 6371000;
+		double distFrac = distanceM / earthRadiusInMeters;
+		
+		
+		
+		double latitudeResult = asin(sin(latRad) * cos(distFrac) + cos(latRad) * sin(distFrac) * cos(brngRad));
+		double a = atan2(sin(brngRad) * sin(distFrac) * cos(latRad), cos(distFrac) - sin(latRad) * sin(latitudeResult));
+		double longitudeResult = (lonRad + a + 3 * PI) % (2 * PI) - PI;
+		
+		Position ret = new Position(Math.toDegrees(latitudeResult),Math.toDegrees(longitudeResult));
+		
+		if(pos.hasAltitude)
+		{
+			ret.setAltitude(pos.Altitude);
+		}
+		
+		return ret;
+	}
+	
+	public static ArrayList<Position> circleAroundPosition(Position center,double radiusM)
+	{
+		ArrayList<Position> points = new ArrayList<>();
+		
+		for(double b = 0;b < 360;b+=(360/72))
+		{
+			points.add(fromBearing(center,b,radiusM));
+		}
+		
+		return points;
 	}
 	
 	public static Position midPoint(Position p1, Position p2)
@@ -70,10 +120,10 @@ public class Util
 		double lon2 = Math.toRadians(p2.getLongitude());
 		
 		double DeltaLambda = lon2 - lon1;
-		double Bx = Math.cos(lat2) * Math.cos(DeltaLambda);
-		double By = Math.cos(lat2) * Math.sin(DeltaLambda);
-		double latMid = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt(Math.pow(Math.cos(lat1) + Bx, 2) + Math.pow(By, 2)));
-		double lonMid = lon1 + Math.atan2(By, Math.cos(lat1) + Bx);
+		double Bx = cos(lat2) * cos(DeltaLambda);
+		double By = cos(lat2) * sin(DeltaLambda);
+		double latMid = Math.atan2(sin(lat1) + sin(lat2), Math.sqrt(Math.pow(cos(lat1) + Bx, 2) + Math.pow(By, 2)));
+		double lonMid = lon1 + Math.atan2(By, cos(lat1) + Bx);
 		
 		Position ret = new Position(Math.toDegrees(latMid), Math.toDegrees(lonMid));
 		
@@ -93,9 +143,9 @@ public class Util
 		double lon = Math.toRadians(p.getLongitude());
 		double alt = p.getAltitude() + 6371000; // 6371000 is the radius of the earth in meters
 		
-		double x = Math.cos(lat) * Math.cos(lon) * alt;
-		double y = Math.cos(lat) * Math.sin(lon) * alt;
-		double z = Math.sin(lat) * alt;
+		double x = cos(lat) * cos(lon) * alt;
+		double y = cos(lat) * sin(lon) * alt;
+		double z = sin(lat) * alt;
 		
 		return new XYZCoordinates(x, y, z);
 	}

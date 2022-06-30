@@ -9,8 +9,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 // Added in version 1.2.0 of the PolyTool library.
-// Class version: 1.0.0
-// Last modified for Library version: 1.2.0
+// Class version: 1.1.0
+// Last modified for Library version: 1.4.0
 
 public class WebRip
 {
@@ -21,7 +21,7 @@ public class WebRip
 	// My theory is that it would just rip the HTML from the website, but again... not tested.
 	// This simple just grabs the website fed in, and returns one string of all the data.
 	// I definitely ripped this from somewhere a long time ago, but I don't remember where. Probably somewhere on StackOverflow.
-	public static String getAsString(String inURL)
+	private static String getAsString(String inURL,int wait)
 	{
 		String url = inURL;
 		URL u;
@@ -36,6 +36,23 @@ public class WebRip
 			uConned.setRequestMethod("GET");
 			uConned.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:73.0) Gecko/20100101 Firefox/73.0");
 			uConned.connect();
+			
+			if(wait > 0)
+			{
+				// Wait for the website to load.
+					// Wait for the website to load.
+					// This is a hacky way to do this, but it works.
+					// Wait 1 second, then try again.
+					try
+					{
+						Thread.sleep(1000 * wait);
+					}
+					catch(InterruptedException e)
+					{
+						e.printStackTrace();
+					}
+			}
+			
 			//System.out.println("Response code: " + uConned.getResponseCode());
 			//System.out.println("Response Message\n++++++++++++++++++++++++++\n" + uConned.getResponseMessage());
 			is = uConned.getInputStream();
@@ -65,5 +82,15 @@ public class WebRip
 			{
 			}
 		}
+	}
+	
+	// it appears as if the "wait" I introduced doesn't make a difference
+	// it is likely that it is a partial fuck-up on my end
+	// I have made this wrapper method the primary access method and privatised the wait method
+	// If I or anyone else can make the page load after a wait in the main method,
+	// make it public, and it will be accessible.
+	public static String getAsString(String inURL)
+	{
+		return getAsString(inURL,0);
 	}
 }
