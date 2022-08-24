@@ -1,11 +1,11 @@
 package io.github.greenwolf24.PolyTool.Mapping;
 
 // Added in version 1.3.0 of the PolyTool library.
-// Class version: 1.1.0
-// Last modified for Library version: 1.4.0
+// Class version: 1.2.0
+// Last modified for Library version: 1.5.0
 
-import io.github.greenwolf24.PolyTool.Graphing.Triangle;
-import io.github.greenwolf24.PolyTool.Graphing.XYZCoordinates;
+import io.github.greenwolf24.PolyTool.Maths.Graphing.Triangle;
+import io.github.greenwolf24.PolyTool.Maths.Graphing.XYZCoordinates;
 
 import java.util.ArrayList;
 
@@ -87,6 +87,77 @@ public class Util
 		}
 		
 		return ret;
+	}
+	
+	public static Position distanceAlongBetweenPoints(Position a,Position b,double distanceM)
+	{
+		return fromBearing(a,bearingFrom(a,b),distanceM);
+	}
+	
+	public static Position percentAlongBetweenPoints(Position a,Position b,double zeroToOne)
+	{
+		return distanceAlongBetweenPoints(a,b,zeroToOne * distanceBetween(a,b));
+	}
+	
+	public static Position distanceAlongPath(ArrayList<Position> path,double distanceM)
+	{
+		Position pa = null;
+		Position pb = null;
+		double finDis = 0.0;
+		double pathDis = pathLength(path);
+		
+		// reverse
+		if(distanceM < 0)
+		{
+			pa = path.get(1);
+			pb = path.get(0);
+			finDis = distanceBetween(pa,pb) + Math.abs(distanceM);
+		}
+		else if(distanceM > pathDis)
+		{
+			pa = path.get(path.size() - 2);
+			pb = path.get(path.size() - 1);
+			finDis = distanceM - pathDis + distanceBetween(pa,pb);
+		}
+		else
+		{
+			finDis = distanceM;
+			for(int i = 0;i < path.size() - 1;i++)
+			{
+				pa = path.get(i);
+				pb = path.get(i + 1);
+				double disB = distanceBetween(pa,pb);
+				
+				if(finDis > disB)
+				{
+					finDis -= disB;
+					continue;
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
+		
+		return fromBearing(pa,bearingFrom(pa,pb),finDis);
+	}
+	
+	public static Position percentAlongPath(ArrayList<Position> path,double zeroToOne)
+	{
+		return distanceAlongPath(path,zeroToOne * pathLength(path));
+	}
+	
+	public static double pathLength(ArrayList<Position> path)
+	{
+		double sum = 0.0;
+		
+		for(int i = 0;i < path.size() - 1;i++)
+		{
+			sum += distanceBetween(path.get(i),path.get(i+1));
+		}
+		
+		return sum;
 	}
 	
 	public static ArrayList<Position> circleAroundPosition(Position center,double radiusM)

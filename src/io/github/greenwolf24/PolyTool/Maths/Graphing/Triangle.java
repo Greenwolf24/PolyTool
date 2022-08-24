@@ -1,4 +1,4 @@
-package io.github.greenwolf24.PolyTool.Graphing;
+package io.github.greenwolf24.PolyTool.Maths.Graphing;
 
 public class Triangle
 {

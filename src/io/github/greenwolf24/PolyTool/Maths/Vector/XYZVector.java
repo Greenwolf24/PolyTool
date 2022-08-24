@@ -1,4 +1,4 @@
-package io.github.greenwolf24.PolyTool.Vector;
+package io.github.greenwolf24.PolyTool.Maths.Vector;
 
 import java.util.ArrayList;
 

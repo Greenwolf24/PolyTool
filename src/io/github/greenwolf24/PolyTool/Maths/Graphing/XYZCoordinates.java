@@ -1,10 +1,8 @@
-package io.github.greenwolf24.PolyTool.Graphing;
+package io.github.greenwolf24.PolyTool.Maths.Graphing;
 
 // Added in version 1.3.0 of the PolyTool library.
 // Class version: 1.0.0
 // Last modified for Library version: 1.3.0
-
-import io.github.greenwolf24.PolyTool.Mapping.Position;
 
 public class XYZCoordinates extends XYCoordinates
 {

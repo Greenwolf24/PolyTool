@@ -1,8 +1,8 @@
 package io.github.greenwolf24.PolyTool.Mapping.KML;
 
 // Added in version 1.4.0 of the PolyTool library.
-// Class version: 1.1.0
-// Last modified for Library version: 1.4.0
+// Class version: 1.1.1
+// Last modified for Library version: 1.5.0
 
 import io.github.greenwolf24.PolyTool.Color.SimpleColor;
 import io.github.greenwolf24.PolyTool.Mapping.Position;
@@ -50,6 +50,10 @@ public class PathMaker
 			if(altitude)
 			{
 				path += "," + positions.get(i).getAltitude();
+			}
+			else
+			{
+				path += ",0";
 			}
 			path += " ";
 		}
