@@ -1,8 +1,8 @@
 package io.github.greenwolf24.PolyTool.Files.CSV;
 
 // Added in version 1.5.0 of the PolyTool library.
-// Class version: 1.0.0
-// Last modified for Library version: 1.5.0
+// Class version: 1.1.0
+// Last modified for Library version: 1.5.1
 
 import io.github.greenwolf24.PolyTool.Files.SimpleReader;
 
@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ReadCsvFile
 {
@@ -20,68 +21,108 @@ public class ReadCsvFile
 	// The purpose of this class is to provide a very simple wrapper for reading CSV files
 	// The default DumbReader method will simply grab the file, and
 	// return a 2d array of strings split by the chosen delimiter
-	
+
+	public ReadCsvFile(String file)
+	{
+		csvFile = new File(file);
+		delimiter = ",";
+	}
 	public ReadCsvFile(File file)
 	{
 		csvFile = file;
-		// TODO!!! Default Delimiter does not exist in V1.5.0-T02
 		delimiter = ",";
 	}
-	
+
+	public ReadCsvFile(String file, String delimiter)
+	{
+		csvFile = new File(file);
+		this.delimiter = delimiter;
+	}
 	public ReadCsvFile(File file, String delimiter)
 	{
 		csvFile = file;
 		this.delimiter = delimiter;
 	}
-	
-	
-	/* TODO
-		Before releasing this
-		make it so that as many of the actual calls are just wrappers
-		The only real parser should be into an ArrayList<ArrayList<Object>>
-		the wrappers will convert as needed
-	
-	 */
+
 	
 	public String[][] getAsStringsArray()
 	{
 		return getAsStringsArray(false);
 	}
-	
-	//TODO
-	// Implement a method of allowing quotes to prevent splitting
-	// This can likely be taken from the method I am working on within my
-	// AirNerdTools AirportInitializer
+
 	public String[][] getAsStringsArray(boolean skipFirstLine)
 	{
-		ArrayList<String[]> records = new ArrayList<>();
+		ArrayList<ArrayList<String>> records = new ArrayList<>();
 		
 		for(String line : SimpleReader.getAsStringLines(csvFile))
 		{
-			records.add(line.split(delimiter));
-		}
-		
-		// this may cause issues if there is data later than the first line implies
-		
-		String[][] ret = new String[records.size()][records.get(0).length];
-		
-		for(int i = 0;i < records.size();i++)
-		{
-			if(!(skipFirstLine && i == 0))
+			//records.add(line.split(delimiter));
+			String[] linesplit = line.split(delimiter);
+			ArrayList<String> input = new ArrayList<>();
+			for(int i = 0;i < linesplit.length;i++)
 			{
-				ret[i] = records.get(i);
+				if(linesplit[i].startsWith("\""))
+				{
+					String cell = linesplit[i];
+					while(!cell.endsWith("\""))
+					{
+						i++;
+						cell = cell + "," + linesplit[i];
+					}
+					cell = cell.substring(1,cell.length()-1);
+					input.add(cell);
+				}
+				else
+				{
+					input.add(linesplit[i]);
+				}
+			}
+			records.add(input);
+		}
+
+
+		// This is a clunky way of doing it, but it should work beautifully
+		int offset = 0;
+		if(skipFirstLine){offset++;}
+
+		// this may cause issues if there is data later than the first line implies
+
+		String[][] ret = new String[records.size()-offset][records.get(0).size()];
+		
+		for(int i = 0+offset;i < records.size();i++)
+		{
+			//if(!(skipFirstLine && i == 0))
+			{
+				String[] lr = new String[records.get(i).size()];
+				for(int r = 0;r < records.get(i).size();r++)
+				{
+					lr[r] = records.get(i).get(r);
+				}
+				//ret[i] = (String[])records.get(i).toArray();
+				ret[i-offset] = lr;
 			}
 		}
 		
 		return ret;
 	}
-	
-	//TODO
-	// This doesn't work
-	// all outputs seem to have length of zero
+
 	public ArrayList<ArrayList<String>> getAsStringsArrayList()
 	{
+		return getAsStringsArrayList(false);
+	}
+	public ArrayList<ArrayList<String>> getAsStringsArrayList(boolean skipFirstLine)
+	{
 		ArrayList<ArrayList<String>> records = new ArrayList<>();
+
+		String[][] work = getAsStringsArray(skipFirstLine);
+		for(String[] line : work)
+		{
+			ArrayList<String> linar = new ArrayList<>(List.of(line));
+			//records.add((ArrayList<String>) Arrays.stream(line).toList());
+			records.add(linar);
+		}
+
+		/*
 		try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
 			String line;
 			while ((line = br.readLine()) != null) {
@@ -90,7 +131,8 @@ public class ReadCsvFile
 			}
 		}
 		catch(Exception ex){}
-		
+		 */
+
 		return records;
 	}
 }

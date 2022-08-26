@@ -1,21 +1,22 @@
 package io.github.greenwolf24.PolyTool.JavaMap;
 
+// Added in version UNKWN of the PolyTool library.
+// Class version: 1.0.1
+// Last modified for Library version: 1.5.1
+
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.Set;
 
 public class Sorter
 {
 	public static <E> ArrayList<E> sort(LinkedHashMap<E, Double> map)
 	{
 		// What we have is a map of objects to integers.
-		// We want to sort the objects by their integer values.
+		// We want to sort the objects b
+		// y their integer values.
 		// The end result is an arraylist of objects sorted by their integer values.
-		Set<E> keysSet = map.keySet();
-		Collection<Double> valuesCol = map.values();
-		ArrayList<E> keys = new ArrayList<>(keysSet);
-		ArrayList<Double> values = new ArrayList<>(valuesCol);
+		ArrayList<E> keys = new ArrayList<>(map.keySet());
+		ArrayList<Double> values = new ArrayList<>(map.values());
 		ArrayList<E> sorted = new ArrayList<>();
 		
 		while(keys.size() > 0)
